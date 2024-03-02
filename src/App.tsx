@@ -6,43 +6,47 @@ import styled from 'styled-components';
 import AddModal from './components/Modal/AddModal';
 import { db } from './firebase';
 import { ITask } from './types';
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { Unsubscribe, collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 
 function App() {
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [state, setState] = useState('');
   const [isOpen, setIsOpen] = useState(false);
 
-  const fetchTasks = async () => {
-    const tasksQuery = query(collection(db, 'tasks'), orderBy('createdAt', 'desc'));
-
-    const snapshot = await getDocs(tasksQuery);
-    const tasks = snapshot.docs.map((doc) => {
-      const { createdAt, endedAt, hotel, id, location, mail, option, person, state, textarea } =
-        doc.data();
-
-      return {
-        createdAt,
-        endedAt,
-        hotel,
-        id,
-        location,
-        mail,
-        option,
-        person,
-        state,
-        textarea,
-      };
-    });
-    setTasks(tasks);
-  };
-
   const handleButton = () => {
     setIsOpen(true);
   };
 
   useEffect(() => {
+    let unsubscribe: Unsubscribe | null = null;
+    const fetchTasks = async () => {
+      const tasksQuery = query(collection(db, 'tasks'), orderBy('createdAt', 'desc'));
+
+      unsubscribe = await onSnapshot(tasksQuery, (snapshot) => {
+        const tasks = snapshot.docs.map((doc) => {
+          const { createdAt, endedAt, hotel, id, location, mail, option, person, state, textarea } =
+            doc.data();
+
+          return {
+            createdAt,
+            endedAt,
+            hotel,
+            id,
+            location,
+            mail,
+            option,
+            person,
+            state,
+            textarea,
+          };
+        });
+        setTasks(tasks);
+      });
+    };
     fetchTasks();
+    return () => {
+      unsubscribe && unsubscribe();
+    };
   }, []);
 
   return (
@@ -51,7 +55,7 @@ function App() {
         <Header setState={setState} />
         <CardContainer>
           {tasks.map((task) => (
-            <Card {...task} />
+            <Card key={task.id} {...task} />
           ))}
         </CardContainer>
         <AddContainer>
