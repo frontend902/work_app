@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { collection, addDoc, setDoc, doc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { database } from '../../firebase';
+import { db } from '../../firebase';
 
 interface AddModalProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,19 +21,23 @@ export interface DataProps {
 const AddModal = ({ setOpen }: AddModalProps) => {
   const { register, handleSubmit } = useForm<DataProps>();
 
-  const docRef = doc(database, 'data', 'jiho');
-
   const onValid = async (data: DataProps) => {
-    // const finalData = {
-    //   ...data,
-    //   state: '미처리',
-    // };
-    // try {
-    //   await updateDoc(docRef, { task: arrayUnion(finalData) });
-    //   setOpen(false);
-    // } catch (e) {
-    //   console.error(e);
-    // }
+    try {
+      const doc = await addDoc(collection(db, 'tasks'), {
+        ...data,
+        state: '미처리',
+        createdAt: Date.now(),
+        endedAt: Date.now(),
+      });
+
+      await updateDoc(doc, {
+        id: doc.id,
+      });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setOpen(false);
+    }
   };
 
   const handleCancle = () => {
