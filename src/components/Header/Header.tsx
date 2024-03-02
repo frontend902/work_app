@@ -55,6 +55,7 @@ const Tracking = styled.div`
 `;
 
 const Title = styled.h1`
+  margin: 20px;
   font-size: 2rem;
   font-weight: 600;
   font-family: 'font_bold';

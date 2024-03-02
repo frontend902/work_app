@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Bedge from './Bedge';
-import { DocumentData } from 'firebase/firestore';
 import TaskModal from './Modal/TaskModal';
 import { ITask } from '../types';
 import { makeTime } from '../utils';
@@ -43,7 +42,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 2%;
+  width: 23%;
   height: 250px;
   padding: 20px;
   border: 2px solid #ddd;
