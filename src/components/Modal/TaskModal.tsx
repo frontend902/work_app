@@ -30,6 +30,12 @@ const TaskModal = ({ setOpen, task }: AddModalProps) => {
         state: progress,
         endedAt: Date.now(),
       });
+    } else if (progress === '미처리') {
+      await updateDoc(doc(db, 'tasks', id), {
+        state: progress,
+        createdAt: '-',
+        endedAt: '-',
+      });
     }
 
     setOpen(false);

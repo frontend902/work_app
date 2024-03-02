@@ -15,19 +15,23 @@ const Card = (task: ITask) => {
   return (
     <>
       <Container onClick={handleClick}>
-        <BedgeContainer>
-          <Bedge color='#E1AFD1'>{task.location}</Bedge>
-          <Bedge color='#FFE6E6'>{task.person}</Bedge>
-        </BedgeContainer>
+        <div>
+          <BedgeContainer>
+            <Bedge color='#E1AFD1'>{task.location}</Bedge>
+            <Bedge color='#FFE6E6'>{task.person}</Bedge>
+          </BedgeContainer>
 
-        <HotelTitle>{task.hotel}</HotelTitle>
-        <MailTitle>{task.mail}</MailTitle>
-        <Progress color={task.state}>
-          <span></span>
-          {task.state}
-        </Progress>
-        {task.state === '처리중' && <Progress>{makeTime(new Date(task.createdAt))}</Progress>}
-        {task.state === '처리완료' && <Progress>{makeTime(new Date(task.endedAt))}</Progress>}
+          <HotelTitle>{task.hotel}</HotelTitle>
+          <MailTitle>{task.mail}</MailTitle>
+        </div>
+        <div>
+          <Progress color={task.state}>
+            <span></span>
+            {task.state}
+          </Progress>
+          {task.state === '처리중' && <Progress>{makeTime(new Date(task.createdAt))}</Progress>}
+          {task.state === '처리완료' && <Progress>{makeTime(new Date(task.endedAt))}</Progress>}
+        </div>
       </Container>
 
       {isOpen && <TaskModal setOpen={setIsOpen} task={task} />}
@@ -41,6 +45,7 @@ const Container = styled.div`
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 10px;
   width: 23%;
   height: 250px;
@@ -69,6 +74,10 @@ const Progress = styled.div<{ color?: string }>`
   display: flex;
   gap: 10px;
   align-items: center;
+
+  &:first-child {
+    margin-bottom: 10px;
+  }
 
   span {
     width: 10px;

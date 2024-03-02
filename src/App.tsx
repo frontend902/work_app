@@ -20,7 +20,7 @@ function App() {
   useEffect(() => {
     let unsubscribe: Unsubscribe | null = null;
     const fetchTasks = async () => {
-      const tasksQuery = query(collection(db, 'tasks'), orderBy('createdAt', 'desc'));
+      const tasksQuery = query(collection(db, 'tasks'));
 
       unsubscribe = await onSnapshot(tasksQuery, (snapshot) => {
         const tasks = snapshot.docs.map((doc) => {
