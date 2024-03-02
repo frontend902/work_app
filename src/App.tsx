@@ -1,41 +1,59 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from './components/Header/Header';
 import Layout from './components/Layout';
 import Card from './components/Card';
 import styled from 'styled-components';
 import AddModal from './components/Modal/AddModal';
-import { database } from './firebase';
-import { collection, getDocs, DocumentData, doc, getDoc } from 'firebase/firestore';
+import { db } from './firebase';
+import { ITask } from './types';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 
 function App() {
-  const [data, setData] = useState<DocumentData[]>([]);
+  const [tasks, setTasks] = useState<ITask[]>([]);
   const [state, setState] = useState('');
   const [isOpen, setIsOpen] = useState(false);
 
-  const docRef = doc(database, 'data', 'jiho');
+  const fetchTasks = async () => {
+    const tasksQuery = query(collection(db, 'tasks'), orderBy('createdAt', 'desc'));
+
+    const snapshot = await getDocs(tasksQuery);
+    const tasks = snapshot.docs.map((doc) => {
+      const { createdAt, endedAt, hotel, id, location, mail, option, person, state, textarea } =
+        doc.data();
+
+      return {
+        createdAt,
+        endedAt,
+        hotel,
+        id,
+        location,
+        mail,
+        option,
+        person,
+        state,
+        textarea,
+      };
+    });
+    setTasks(tasks);
+  };
+
   const handleButton = () => {
     setIsOpen(true);
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const querySnapshot = (await getDoc(docRef)).data();
-        setData(querySnapshot?.task);
-        // setData(documents);
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-      }
-    };
-
-    fetchData();
-  });
+    fetchTasks();
+  }, []);
 
   return (
     <div className='App'>
       <Layout>
         <Header setState={setState} />
-        <CardContainer>{data && data.map((db) => <Card {...db} />)}</CardContainer>
+        <CardContainer>
+          {tasks.map((task) => (
+            <Card {...task} />
+          ))}
+        </CardContainer>
         <AddContainer>
           <AddButton onClick={handleButton}>+</AddButton>
         </AddContainer>
