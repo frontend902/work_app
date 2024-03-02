@@ -23,7 +23,10 @@ const Card = (task: ITask) => {
 
         <HotelTitle>{task.hotel}</HotelTitle>
         <MailTitle>{task.mail}</MailTitle>
-        <Progress>{task.state}</Progress>
+        <Progress color={task.state}>
+          <span></span>
+          {task.state}
+        </Progress>
         {task.state === '처리중' && <Progress>{makeTime(new Date(task.createdAt))}</Progress>}
         {task.state === '처리완료' && <Progress>{makeTime(new Date(task.endedAt))}</Progress>}
       </Container>
@@ -40,7 +43,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 20%;
+  width: 25%;
   padding: 20px;
   border: 2px solid #ddd;
   border-radius: 20px;
@@ -58,10 +61,20 @@ const MailTitle = styled.p`
 
 const HotelTitle = styled.h2`
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
 `;
 
-const Progress = styled.div`
+const Progress = styled.div<{ color?: string }>`
   display: flex;
   gap: 10px;
+  align-items: center;
+
+  span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: ${(props) =>
+      props.color === '미처리' ? 'red' : props.color === '처리중' ? 'gold' : '#82CD47'};
+  }
 `;
