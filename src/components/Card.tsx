@@ -84,6 +84,12 @@ const Progress = styled.div<{ color?: string }>`
     height: 10px;
     border-radius: 50%;
     background-color: ${(props) =>
-      props.color === '미처리' ? 'red' : props.color === '처리중' ? 'gold' : '#82CD47'};
+      props.color === '미처리'
+        ? 'red'
+        : props.color === '처리중'
+        ? 'gold'
+        : props.color === '처리완료'
+        ? '#82CD47'
+        : '#494949'};
   }
 `;

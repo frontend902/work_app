@@ -10,7 +10,9 @@ import { Unsubscribe, collection, onSnapshot, orderBy, query } from 'firebase/fi
 
 function App() {
   const [tasks, setTasks] = useState<ITask[]>([]);
-  const [state, setState] = useState('');
+  const [filter, setFilter] = useState<ITask[]>([]);
+  const [count, setCount] = useState(0);
+  const [state, setState] = useState('모두');
   const [isOpen, setIsOpen] = useState(false);
 
   const handleButton = () => {
@@ -19,6 +21,7 @@ function App() {
 
   useEffect(() => {
     let unsubscribe: Unsubscribe | null = null;
+
     const fetchTasks = async () => {
       const tasksQuery = query(collection(db, 'tasks'));
 
@@ -43,20 +46,31 @@ function App() {
         setTasks(tasks);
       });
     };
+
     fetchTasks();
+
     return () => {
       unsubscribe && unsubscribe();
     };
   }, []);
 
+  useEffect(() => {
+    const countDone = tasks.filter((task) => task.state === '처리완료').length;
+    setCount(countDone);
+  }, [tasks]);
+
+  useEffect(() => {
+    const filterData = tasks.filter((task) => task.state === state);
+    setFilter(filterData);
+  }, [tasks, state]);
+
   return (
     <div className='App'>
       <Layout>
-        <Header setState={setState} />
+        <Header setState={setState} total={tasks.length} done={count} />
         <CardContainer>
-          {tasks.map((task) => (
-            <Card key={task.id} {...task} />
-          ))}
+          {state === '모두' && tasks.map((task) => <Card key={task.id} {...task} />)}
+          {state !== '모두' && filter.map((task) => <Card key={task.id} {...task} />)}
         </CardContainer>
         <AddContainer>
           <AddButton onClick={handleButton}>+</AddButton>

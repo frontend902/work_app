@@ -1,28 +1,33 @@
-import React from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { db } from '../../firebase';
 
 interface HeaderProps {
   setState: React.Dispatch<React.SetStateAction<string>>;
+  total: number;
+  done: number;
 }
 
-const Header = ({ setState }: HeaderProps) => {
+const Header = ({ setState, total, done }: HeaderProps) => {
   const handleOptions = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setState(e.target.value);
   };
+
   return (
     <Container>
       <Title>Hotel Contents</Title>
-      {/* <Tracking>
+      <Tracking>
+        <div>
+          <span>인입 건수 :</span>
+          <span>{total}</span>
+        </div>
         <div>
           <span>처리 완료 :</span>
-          <span>0</span>
-        </div>
-        <div>
-          <span>처리 중 :</span>
-          <span>0</span>
+          <span>{done}</span>
         </div>
 
-        <div>
+        <Select>
           <select name='options' id='options' onChange={handleOptions}>
             <option value='선택' disabled selected>
               선택
@@ -33,8 +38,8 @@ const Header = ({ setState }: HeaderProps) => {
             <option value='처리중'>처리중</option>
             <option value='처리완료'>처리완료</option>
           </select>
-        </div>
-      </Tracking> */}
+        </Select>
+      </Tracking>
     </Container>
   );
 };
@@ -48,7 +53,7 @@ const Container = styled.div`
 const Tracking = styled.div`
   display: flex;
   gap: 20px;
-
+  padding-left: 20px;
   span {
     margin-right: 5px;
   }
@@ -59,4 +64,9 @@ const Title = styled.h1`
   font-size: 2rem;
   font-weight: 600;
   font-family: 'font_bold';
+`;
+
+const Select = styled.div`
+  margin-left: auto;
+  padding-right: 50px;
 `;
