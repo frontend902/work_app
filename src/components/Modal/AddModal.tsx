@@ -98,6 +98,13 @@ const Modal = styled.div`
   border: 1px solid #ccc;
   background-color: #fff;
   border-radius: 20px;
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    font-family: 'font_bold';
+    margin-bottom: 10px;
+  }
 `;
 
 const Form = styled.form`
