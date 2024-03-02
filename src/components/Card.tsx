@@ -43,7 +43,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 25%;
+  width: 2%;
+  height: 250px;
   padding: 20px;
   border: 2px solid #ddd;
   border-radius: 20px;
