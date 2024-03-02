@@ -1,35 +1,52 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import {
-  collection,
-  addDoc,
-  DocumentData,
-  doc,
-  getDoc,
-  updateDoc,
-  setDoc,
-  where,
-  query,
-  getDocs,
-} from 'firebase/firestore';
-import { database } from '../../firebase';
+import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { db } from '../../firebase';
 import Bedge from '../Bedge';
+import { ITask } from '../../types';
+import { makeTime } from '../../utils';
 
 interface AddModalProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  db: DocumentData;
+  task: ITask;
 }
 
-const TaskModal = ({ setOpen, db }: AddModalProps) => {
-  const [state, setState] = useState(db.state);
+const TaskModal = ({ setOpen, task }: AddModalProps) => {
+  const { createdAt, endedAt, hotel, id, location, mail, option, person, state, textarea } = task;
+  const [progress, setProgress] = useState(state);
 
   const handleClick = async () => {
-    // console.log(docSnap.data());
-    // setOpen(false);
+    await updateDoc(doc(db, 'tasks', id), {
+      state: progress,
+    });
+
+    if (progress === '처리중') {
+      await updateDoc(doc(db, 'tasks', id), {
+        state: progress,
+        createdAt: Date.now(),
+      });
+    } else if (progress === '처리완료') {
+      await updateDoc(doc(db, 'tasks', id), {
+        state: progress,
+        endedAt: Date.now(),
+      });
+    }
+
+    setOpen(false);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteDoc(doc(db, 'tasks', id));
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setOpen(false);
+    }
   };
 
   const handleOptions = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setState(e.target.value);
+    setProgress(e.target.value);
   };
 
   return (
@@ -38,15 +55,25 @@ const TaskModal = ({ setOpen, db }: AddModalProps) => {
 
       <Modal>
         <BedgeContainer>
-          <Bedge color='#AD88C6'>{db.option}</Bedge>
-          <Bedge color='#E1AFD1'>{db.location}</Bedge>
-          <Bedge color='#FFE6E6'>{db.person}</Bedge>
+          <Bedge color='#AD88C6'>{option}</Bedge>
+          <Bedge color='#E1AFD1'>{location}</Bedge>
+          <Bedge color='#FFE6E6'>{person}</Bedge>
         </BedgeContainer>
+        <h2>{hotel}</h2>
         <Header>
-          <h2>{db.hotel}</h2>
+          <div>
+            <p>
+              <span>시작 시간_</span>
+              {createdAt !== '-' && <span>{makeTime(new Date(createdAt))}</span>}
+            </p>
+            <p>
+              <span>완료 시간_</span>
+              {endedAt !== '-' && <span>{makeTime(new Date(endedAt))}</span>}
+            </p>
+          </div>
           <select name='options' id='options' onChange={handleOptions}>
-            <option value='선택' disabled selected>
-              선택
+            <option value={state} disabled selected>
+              {state}
             </option>
             <option value='질의중'>질의중</option>
             <option value='미처리'>미처리</option>
@@ -54,9 +81,12 @@ const TaskModal = ({ setOpen, db }: AddModalProps) => {
             <option value='처리완료'>처리완료</option>
           </select>
         </Header>
-        <p>{db.mail}</p>
-        <TextArea>{db.textarea}</TextArea>
+        <p>{mail}</p>
+        <TextArea>{textarea}</TextArea>
         <ButtonCotnainer>
+          <Button type='button' color='red' onClick={handleDelete}>
+            Delete
+          </Button>
           <Button type='submit' color='#40A2E3' onClick={handleClick}>
             Confirm
           </Button>
