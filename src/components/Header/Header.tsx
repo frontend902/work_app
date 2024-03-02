@@ -12,7 +12,7 @@ const Header = ({ setState }: HeaderProps) => {
   return (
     <Container>
       <Title>Hotel Contents</Title>
-      <Tracking>
+      {/* <Tracking>
         <div>
           <span>처리 완료 :</span>
           <span>0</span>
@@ -34,7 +34,7 @@ const Header = ({ setState }: HeaderProps) => {
             <option value='처리완료'>처리완료</option>
           </select>
         </div>
-      </Tracking>
+      </Tracking> */}
     </Container>
   );
 };
