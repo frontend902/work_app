@@ -60,6 +60,7 @@ const TaskModal = ({ setOpen, task }: AddModalProps) => {
           <Bedge color='#FFE6E6'>{person}</Bedge>
         </BedgeContainer>
         <h2>{hotel}</h2>
+        <p>{mail}</p>
         <Header>
           <div>
             <p>
@@ -81,7 +82,6 @@ const TaskModal = ({ setOpen, task }: AddModalProps) => {
             <option value='처리완료'>처리완료</option>
           </select>
         </Header>
-        <p>{mail}</p>
         <TextArea>{textarea}</TextArea>
         <ButtonCotnainer>
           <Button type='button' color='red' onClick={handleDelete}>
@@ -121,9 +121,16 @@ const Modal = styled.div`
   border: 1px solid #ccc;
   background-color: #fff;
   border-radius: 20px;
+
+  h2 {
+    margin-bottom: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
 `;
 
 const Header = styled.div`
+  margin-top: 10px;
   display: flex;
   align-items: center;
   gap: 20px;
@@ -131,6 +138,10 @@ const Header = styled.div`
 
   select {
     height: 30px;
+  }
+
+  span {
+    font-size: 0.9rem;
   }
 `;
 
@@ -143,7 +154,7 @@ const BedgeContainer = styled.div`
 const TextArea = styled.textarea`
   width: 100%;
   height: 200px;
-  margin-bottom: 20px;
+  margin: 20px 0;
   padding: 20px;
   border-radius: 20px;
   border: 1px solid #ccc;
