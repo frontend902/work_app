@@ -29,7 +29,7 @@ const Card = (task: ITask) => {
             <span></span>
             {task.state}
           </Progress>
-          {task.state === '처리중' && <Progress>{makeTime(new Date(task.createdAt))}</Progress>}
+          {task.state === '처리중' && <Progress>{makeTime(new Date(task.startedAt))}</Progress>}
           {task.state === '처리완료' && <Progress>{makeTime(new Date(task.endedAt))}</Progress>}
         </div>
       </Container>
@@ -47,7 +47,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
   gap: 10px;
-  width: 23%;
+  width: 30%;
   height: 250px;
   padding: 20px;
   border: 2px solid #ddd;
@@ -57,7 +57,7 @@ const Container = styled.div`
 const BedgeContainer = styled.div`
   display: flex;
   gap: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 `;
 
 const MailTitle = styled.p`
