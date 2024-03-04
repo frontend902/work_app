@@ -26,8 +26,9 @@ const AddModal = ({ setOpen }: AddModalProps) => {
       const doc = await addDoc(collection(db, 'tasks'), {
         ...data,
         state: '미처리',
-        createdAt: '-',
+        startedAt: '-',
         endedAt: '-',
+        createdAt: Date.now(),
       });
 
       await updateDoc(doc, {
