@@ -47,11 +47,19 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
   gap: 10px;
-  width: 30%;
+  width: 32%;
   height: 250px;
   padding: 20px;
   border: 2px solid #ddd;
   border-radius: 20px;
+
+  @media screen and (max-width: 900px) {
+    width: 49%;
+  }
+
+  @media screen and (max-width: 650px) {
+    width: 100%;
+  }
 `;
 
 const BedgeContainer = styled.div`
