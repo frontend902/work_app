@@ -144,3 +144,13 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+
+select {
+  height: 40px;
+  padding: 0 10px;
+  border-radius: 20px;
+}
+
+option {
+  padding: 5px 0;
+}
