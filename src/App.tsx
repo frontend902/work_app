@@ -23,16 +23,28 @@ function App() {
     let unsubscribe: Unsubscribe | null = null;
 
     const fetchTasks = async () => {
-      const tasksQuery = query(collection(db, 'tasks'));
+      const tasksQuery = query(collection(db, 'tasks'), orderBy('createdAt', 'desc'));
 
       unsubscribe = await onSnapshot(tasksQuery, (snapshot) => {
         const tasks = snapshot.docs.map((doc) => {
-          const { createdAt, endedAt, hotel, id, location, mail, option, person, state, textarea } =
-            doc.data();
+          const {
+            createdAt,
+            endedAt,
+            hotel,
+            id,
+            location,
+            mail,
+            option,
+            person,
+            state,
+            textarea,
+            startedAt,
+          } = doc.data();
 
           return {
             createdAt,
             endedAt,
+            startedAt,
             hotel,
             id,
             location,
