@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
@@ -12,33 +12,20 @@ interface AddModalProps {
 }
 
 const TaskModal = ({ setOpen, task }: AddModalProps) => {
-  const { createdAt, endedAt, hotel, id, location, mail, option, person, state, textarea } = task;
+  const { startedAt, endedAt, hotel, id, location, mail, option, person, state, textarea } = task;
   const [progress, setProgress] = useState(state);
+  const [text, setText] = useState<string>(textarea);
 
   const handleClick = async () => {
-    await updateDoc(doc(db, 'tasks', id), {
-      state: progress,
-    });
-
-    if (progress === '처리중') {
+    try {
       await updateDoc(doc(db, 'tasks', id), {
-        state: progress,
-        createdAt: Date.now(),
+        textarea: text,
       });
-    } else if (progress === '처리완료') {
-      await updateDoc(doc(db, 'tasks', id), {
-        state: progress,
-        endedAt: Date.now(),
-      });
-    } else if (progress === '미처리') {
-      await updateDoc(doc(db, 'tasks', id), {
-        state: progress,
-        createdAt: '-',
-        endedAt: '-',
-      });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setOpen(false);
     }
-
-    setOpen(false);
   };
 
   const handleDelete = async () => {
@@ -51,8 +38,39 @@ const TaskModal = ({ setOpen, task }: AddModalProps) => {
     }
   };
 
-  const handleOptions = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleOptions = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     setProgress(e.target.value);
+  };
+
+  useEffect(() => {
+    (async () => {
+      console.log(progress);
+      await updateDoc(doc(db, 'tasks', id), {
+        state: progress,
+      });
+
+      if (progress === '처리중') {
+        await updateDoc(doc(db, 'tasks', id), {
+          state: progress,
+          startedAt: Date.now(),
+        });
+      } else if (progress === '처리완료') {
+        await updateDoc(doc(db, 'tasks', id), {
+          state: progress,
+          endedAt: Date.now(),
+        });
+      } else if (progress === '미처리') {
+        await updateDoc(doc(db, 'tasks', id), {
+          state: progress,
+          startedAt: '-',
+          endedAt: '-',
+        });
+      }
+    })();
+  }, [progress]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setText(e.target.value);
   };
 
   return (
@@ -66,12 +84,12 @@ const TaskModal = ({ setOpen, task }: AddModalProps) => {
           <Bedge color='#FFE6E6'>{person}</Bedge>
         </BedgeContainer>
         <h2>{hotel}</h2>
-        <p>{mail}</p>
+        <Mail>{mail}</Mail>
         <Header>
           <div>
             <p>
               <span>시작 시간_</span>
-              {createdAt !== '-' && <span>{makeTime(new Date(createdAt))}</span>}
+              {startedAt !== '-' && <span>{makeTime(new Date(startedAt))}</span>}
             </p>
             <p>
               <span>완료 시간_</span>
@@ -88,7 +106,7 @@ const TaskModal = ({ setOpen, task }: AddModalProps) => {
             <option value='처리완료'>처리완료</option>
           </select>
         </Header>
-        <TextArea>{textarea}</TextArea>
+        <TextArea onChange={handleChange}>{textarea}</TextArea>
         <ButtonCotnainer>
           <Button type='button' color='red' onClick={handleDelete}>
             Delete
@@ -142,10 +160,6 @@ const Header = styled.div`
   gap: 20px;
   justify-content: space-between;
 
-  select {
-    height: 30px;
-  }
-
   span {
     font-size: 0.9rem;
   }
@@ -154,7 +168,12 @@ const Header = styled.div`
 const BedgeContainer = styled.div`
   display: flex;
   gap: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+`;
+
+const Mail = styled.p`
+  font-size: 1.1rem;
+  margin-top: 10px;
 `;
 
 const TextArea = styled.textarea`
