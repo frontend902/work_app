@@ -99,7 +99,8 @@ export default App;
 const CardContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 20px 2%;
+  justify-content: space-between;
 `;
 
 const AddContainer = styled.div`
