@@ -13,6 +13,7 @@ export default Layout;
 
 const Wrapper = styled.div`
   position: relative;
-  width: 1280px;
+  max-width: 1280px;
   margin: 0 auto;
+  padding: 0 30px 100px 30px;
 `;
