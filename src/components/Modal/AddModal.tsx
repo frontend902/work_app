@@ -53,12 +53,12 @@ const AddModal = ({ setOpen }: AddModalProps) => {
         <h2>Add Task</h2>
         <Form onSubmit={handleSubmit(onValid)}>
           <InputContainer>
-            <HalfInput type='text' placeholder='지역' {...register('location')} />
-            <HalfInput type='text' placeholder='담당자' {...register('person')} />
+            <HalfInput type='text' placeholder='지역' {...register('location')} required />
+            <HalfInput type='text' placeholder='담당자' {...register('person')} required />
           </InputContainer>
-          <input type='text' placeholder='업무 구분' {...register('option')} />
-          <input type='text' placeholder='호텔 이름' {...register('hotel')} />
-          <input type='text' placeholder='메일 제목' {...register('mail')} />
+          <input type='text' placeholder='업무 구분' {...register('option')} required />
+          <input type='text' placeholder='호텔 이름' {...register('hotel')} required />
+          <input type='text' placeholder='메일 제목' {...register('mail')} required />
           <TextArea id='' cols={30} rows={10} {...register('textarea')}></TextArea>
           <ButtonCotnainer>
             <Button type='button' color='red' onClick={handleCancle}>
@@ -106,6 +106,10 @@ const Modal = styled.div`
     font-family: 'font_bold';
     margin-bottom: 10px;
   }
+
+  @media screen and (max-width: 900px) {
+    width: 90%;
+  }
 `;
 
 const Form = styled.form`
@@ -135,6 +139,7 @@ const TextArea = styled.textarea`
   border-radius: 20px;
   border: 1px solid #ccc;
   overflow-y: scroll;
+  line-height: 1.5rem;
 `;
 
 const ButtonCotnainer = styled.div`
