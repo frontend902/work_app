@@ -39,22 +39,18 @@ const TaskModal = ({ setOpen, task }: AddModalProps) => {
   };
 
   const handleOptions = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    if (progress === e.target.value) return;
     setProgress(e.target.value);
   };
 
   useEffect(() => {
     (async () => {
-      console.log(progress);
-      await updateDoc(doc(db, 'tasks', id), {
-        state: progress,
-      });
-
-      if (progress === '처리중') {
+      if (progress === '처리중' && startedAt === '-') {
         await updateDoc(doc(db, 'tasks', id), {
           state: progress,
           startedAt: Date.now(),
         });
-      } else if (progress === '처리완료') {
+      } else if (progress === '처리완료' && endedAt === '-') {
         await updateDoc(doc(db, 'tasks', id), {
           state: progress,
           endedAt: Date.now(),
@@ -89,11 +85,11 @@ const TaskModal = ({ setOpen, task }: AddModalProps) => {
           <Header>
             <div>
               <p>
-                <span>Start_</span>
+                <span>Start_ </span>
                 {startedAt !== '-' && <span>{makeTime(new Date(startedAt))}</span>}
               </p>
               <p>
-                <span>End_</span>
+                <span>End_ </span>
                 {endedAt !== '-' && <span>{makeTime(new Date(endedAt))}</span>}
               </p>
             </div>

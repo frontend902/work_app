@@ -1,4 +1,7 @@
 export const makeTime = (date: Date) => {
+  let year: number = date.getFullYear();
+  let month: number = date.getMonth();
+  let day: number = date.getDate();
   // 시간, 분, 초를 가져옵니다.
   let hours: number | string = date.getHours();
   let minutes: number | string = date.getMinutes();
@@ -11,9 +14,8 @@ export const makeTime = (date: Date) => {
   hours = hours % 12 || 12;
 
   // 시간, 분, 초를 두 자리로 표시하기 위해 필요한 형식을 적용합니다.
-  hours = (hours < 10 ? '0' : '') + hours;
   minutes = (minutes < 10 ? '0' : '') + minutes;
   seconds = (seconds < 10 ? '0' : '') + seconds;
 
-  return `${meridiem} ${hours}:${minutes}:${seconds}`;
+  return `${year}. ${month + 1}. ${day} ${meridiem} ${hours}:${minutes}:${seconds}`;
 };
