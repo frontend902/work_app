@@ -14,6 +14,7 @@ export interface DataProps {
   option: string;
   hotel: string;
   mail: string;
+  time: string;
   textarea: string;
   state: string;
 }
@@ -59,6 +60,7 @@ const AddModal = ({ setOpen }: AddModalProps) => {
           <input type='text' placeholder='업무 구분' {...register('option')} required />
           <input type='text' placeholder='호텔 이름' {...register('hotel')} required />
           <input type='text' placeholder='메일 제목' {...register('mail')} required />
+          <input type='datatime-local' placeholder='인입 시간' {...register('option')} required />
           <TextArea id='' cols={30} rows={10} {...register('textarea')}></TextArea>
           <ButtonCotnainer>
             <Button type='button' color='red' onClick={handleCancle}>
